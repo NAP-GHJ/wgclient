@@ -17,6 +17,7 @@ app.use(createLoading());
 // 3. Model
 // app.model(require('./models/example').default);
 app.model(require('./models/assistantList'));
+app.model(require('./models/wgoup'));
 
 // 4. Router
 app.router(require('./router'));

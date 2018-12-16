@@ -1,7 +1,7 @@
 import * as AssistantService from '../services/assistantList';
 
 export default {
-    namespace: 'assistantList',
+    namespace: 'wgoup',
     state: {
         vmList:[],   // 微信小助手列表
         assistantList:[], // 微信小助手列表
@@ -80,8 +80,9 @@ export default {
     subscriptions: {
         setup({ dispatch, history }) {
             return history.listen(({pathname,query})=>{
-                if(pathname.indexOf('/lists')!== -1){
-                    dispatch({type:'fetch',payload:{}})
+                if(pathname.indexOf('/wgroup')!== -1 || pathname == '/'){
+                    // dispatch({type:'fetch',payload:{}})
+                    console.log("分组页面加载")
                 }
             })
         },

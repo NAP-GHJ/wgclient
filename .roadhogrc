@@ -1,0 +1,20 @@
+{
+  "entry": [
+    "src/index.js"
+    ],
+  "disableCSSModules": false,
+  "publicPath": "/",
+  "extraBabelPlugins": [
+    "transform-runtime",
+    ["import", { "libraryName": "antd", "style": true }]
+  ],
+  "env": {
+    "development": {
+      "extraBabelPlugins": [
+        "dva-hmr"
+      ]
+    }
+  },
+  "proxy": {
+  }
+}

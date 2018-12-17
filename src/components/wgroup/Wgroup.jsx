@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
-import {Row, Col} from 'antd';
+import {Row, Col, Layout} from 'antd';
 
 import { Tree, Spin} from 'antd'
 import {connect} from 'dva';
+
+
+import {Menu, Breadcrumb, Icon} from 'antd';
+  
+const {
+    Header, Content, Footer, Sider,
+} = Layout;
+const SubMenu = Menu.SubMenu;
 
 const {TreeNode} = Tree;
 
@@ -12,6 +20,7 @@ class Wgroup extends Component {
         super(props)
         this.state = {
             imageLoading:false,
+            selected: false,
 
             // 绑定到canvas上的事件
             mouseDown:false,
@@ -48,11 +57,12 @@ class Wgroup extends Component {
         }else if(title.indexOf("FrameLayout")!=-1){
             console.log("第一层")
         }
+        this.setState({selected:true})
     }
 
     // 画矩形
     draw(x1,y1,x2,y2){
-        var canvas = document.getElementById("operation");
+        var canvas = document.getElementById("cover");
         for(let i = 0; i < 5; i++){
             var context = canvas.getContext('2d');
             context.fillStyle = "#000";
@@ -86,7 +96,7 @@ class Wgroup extends Component {
      */
     mouseClickHandle = () =>{
         const ip = this.props.selectDevice;
-        if(!ip || ip === undefined) return alert("未选择虚拟机");
+        if(!ip || ip === undefined) return;
 
         // 计算映射的坐标位置
         const extendX = 600 / 360
@@ -158,6 +168,8 @@ class Wgroup extends Component {
     open(ip) {
          
         this.setState({imgLoading: true });
+        let isSelected = this.state.selected;
+
         timer = setTimeout(() => {
             const BLANK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
             const canvas = document.getElementById('operation');
@@ -215,6 +227,7 @@ class Wgroup extends Component {
                     canvas.width = img.width;
                     canvas.height = img.height;
                     // 进行图片的裁剪
+                    // if(!_this.state.selected)
                     g.drawImage(img, 0, 0)
                     // g.drawImage(img,0,20,360,550,0,0,360,550)
                     img.onload = null
@@ -241,97 +254,135 @@ class Wgroup extends Component {
             <div id = "wgroup">
                 <Row>
                     {/* 第一部分:画布呈现 minicap 界面 */}
-                    <Col span={8}>
+                    <Col span={7}>
                         <div id="minicap">
                             <Spin size="large" spinning={this.state.imageLoading}>
                                 <canvas ref="canvas" id="operation" width="360" height="640">
                                     你的浏览器不支持
                                 </canvas>
+                                <canvas ref="canvas" style={{position:"absolute",left:0,top:0}} id="cover" width="360" height="640">
+                                    你的浏览器不支持
+                                </canvas>
                             </Spin>
                         </div>
                     </Col>
-                    <Col span={1}></Col>
                     {/* 第二部分:树状的显示UI树 */}
-                    <Col span={11}>
-                        <div id="nodeTree">
-                            <Tree
-                        showLine
-                        defaultExpandedKeys={['0-0']}
-                        onSelect={this.onSelect}
-                    >
-                        <TreeNode title="FrameLayout [0,0][1440,2392]" key="0-0">
-                        <TreeNode title="android.support.v7.widget.RecyclerView [0,252][1440,2224]" key="0-0-0">
-                            <TreeNode title="LinearLayout{天猫} [0,252][1440,403]" key="0-0-0-0">
-                                <TreeNode title="ImageView [38,418][272,602]" key="0-0-0-0-1" />
-                                <TreeNode title="TextView [38,418][272,602]" key="0-0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{聚划算} [321,418][555,675]" key="0-0-0-1">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-1-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{天猫国际} [321,418][555,675]" key="0-0-0-2">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{饿了么} [321,418][555,675]" key="0-0-0-3">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{天猫超市} [321,418][555,675]" key="0-0-0-4">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{充值中心} [321,418][555,675]" key="0-0-0-5">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{飞猪旅行} [321,418][555,675]" key="0-0-0-6">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{领金币} [321,418][555,675]" key="0-0-0-7">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{拍卖} [321,418][555,675]" key="0-0-0-8">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{分类} [321,418][555,675]" key="0-0-0-9">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            
-                        </TreeNode>
-                        
-                        <TreeNode title="FrameLayout [0,0][1440,2392]" key="0-1">
-                            <TreeNode title="LinearLayout ..." key="0-0-1-0" />
-                        </TreeNode>
-                        <TreeNode title="TabWidget [0,0][1440,2392]" key="0-2">
-                        <TreeNode title="LinearLayout{首页} [321,418][555,675]" key="1-0-0-0">
-                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{微淘} [321,418][555,675]" key="1-0-0-0">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{消息} [321,418][555,675]" key="1-0-0-0">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{购物车} [321,418][555,675]" key="1-0-0-0">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                            <TreeNode title="LinearLayout{我的淘宝} [321,418][555,675]" key="1-0-0-0">
-                                <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
-                                <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
-                            </TreeNode>
-                        </TreeNode>
-                        </TreeNode>
-                    </Tree>
-                        </div>
+                    <Col style={{marginLeft:10,minHeight: 360}} span={11}>
+                        <Layout style={{overflow: 'auto', height: '100vh',left: 0}}>
+                            <Header style={{ background: '#fff', padding: 0 }}>
+                            <Menu
+                                defaultSelectedKeys={['1']}
+                                defaultOpenKeys={['sub1']}
+                                mode="horizontal"
+                                theme="dark"
+                                >
+                                <Menu.Item key="1">
+                                    <Icon type="pie-chart" />
+                                    <span>GUI 树</span>
+                                </Menu.Item>
+                                <Menu.Item key="2">
+                                    <Icon type="desktop" />
+                                    <span>状态模型</span>
+                                </Menu.Item>
+                                <Menu.Item key="3">
+                                    <Icon type="inbox" />
+                                    <span>收集反馈</span>
+                                </Menu.Item>
+                                <SubMenu key="sub1" title={<span><Icon type="mail" /><span>定制策略</span></span>}>
+    
+                                </SubMenu>
+                                </Menu>
+                            </Header>
+                            <Content style={{ margin: '0 16px' }}>
+                                <Breadcrumb style={{ margin: '16px 0' }}>
+                                <Breadcrumb.Item>淘宝</Breadcrumb.Item>
+                                <Breadcrumb.Item>MainActivity</Breadcrumb.Item>
+                                </Breadcrumb>
+                                <div style={{ padding: 24, background: '#fff', minHeight: 600 }}>
+                                    <div id="nodeTree">
+                                <Tree
+                                    showLine
+                                    defaultExpandedKeys={['0-0']}
+                                    onSelect={this.onSelect}>
+                                    <TreeNode title="FrameLayout [0,0][1440,2392]" key="0-0">
+                                    <TreeNode title="android.support.v7.widget.RecyclerView [0,252][1440,2224]" key="0-0-0">
+                                        <TreeNode title="LinearLayout{天猫} [0,252][1440,403]" key="0-0-0-0">
+                                            <TreeNode title="ImageView [38,418][272,602]" key="0-0-0-0-1" />
+                                            <TreeNode title="TextView [38,418][272,602]" key="0-0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{聚划算} [321,418][555,675]" key="0-0-0-1">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-1-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{天猫国际} [321,418][555,675]" key="0-0-0-2">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{饿了么} [321,418][555,675]" key="0-0-0-3">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{天猫超市} [321,418][555,675]" key="0-0-0-4">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{充值中心} [321,418][555,675]" key="0-0-0-5">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{飞猪旅行} [321,418][555,675]" key="0-0-0-6">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{领金币} [321,418][555,675]" key="0-0-0-7">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{拍卖} [321,418][555,675]" key="0-0-0-8">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{分类} [321,418][555,675]" key="0-0-0-9">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        
+                                    </TreeNode>
+                                    
+                                    <TreeNode title="FrameLayout [0,0][1440,2392]" key="0-1">
+                                        <TreeNode title="LinearLayout ..." key="0-0-1-0" />
+                                    </TreeNode>
+                                    <TreeNode title="TabWidget [0,0][1440,2392]" key="0-2">
+                                    <TreeNode title="LinearLayout{首页} [321,418][555,675]" key="1-0-0-0">
+                                        <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{微淘} [321,418][555,675]" key="1-0-0-0">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{消息} [321,418][555,675]" key="1-0-0-0">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{购物车} [321,418][555,675]" key="1-0-0-0">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                        <TreeNode title="LinearLayout{我的淘宝} [321,418][555,675]" key="1-0-0-0">
+                                            <TreeNode title="ImageView [321,418][272,602]" key="0-0-0-1" />
+                                            <TreeNode title="TextView [321,418][272,602]" key="0-0-0-2" />
+                                        </TreeNode>
+                                    </TreeNode>
+                                    </TreeNode>
+                                </Tree>
+                            </div>
+                                </div>
+                            </Content>
+                            <Footer style={{ textAlign: 'center' }}>
+                                NJU Android Testing Platform by Hongjun Ge
+                            </Footer>
+                        </Layout>
                     </Col>
                 </Row>
             </div>
